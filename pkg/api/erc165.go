@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
-	"github.com/rovergulf/eth-contracts-go/abis/erc165"
+	"github.com/rovergulf/eth-contracts-go/abis/common/erc165"
 	"go.uber.org/zap"
 )
 
