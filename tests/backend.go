@@ -2,11 +2,11 @@ package tests
 
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
-	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core"
+	"math/big"
 )
 
-var defaultAlloc = hexutil.MustDecodeBig("100e27")
+var defaultAlloc = new(big.Int)
 
 type SimulatedBackend struct {
 	*backends.SimulatedBackend
@@ -17,6 +17,7 @@ func (b *SimulatedBackend) Shutdown() {
 }
 
 func NewFakeBackend() *SimulatedBackend {
+	defaultAlloc.SetString("1000000000000000000000", 10)
 	return &SimulatedBackend{
 		SimulatedBackend: backends.NewSimulatedBackend(core.GenesisAlloc{
 			Account0:  core.GenesisAccount{Balance: defaultAlloc},
