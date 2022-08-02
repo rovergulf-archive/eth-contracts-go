@@ -1,3 +1,5 @@
+[![Golang CI](https://github.com/rovergulf/eth-contracts-go/actions/workflows/checks.yml/badge.svg)](https://github.com/rovergulf/eth-contracts-go/actions/workflows/checks.yml)
+
 # ETH Contracts Go
 
 This repository contains Ethereum Smart Contracts bindings using Golang generated ABI code 
