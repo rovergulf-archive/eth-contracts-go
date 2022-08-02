@@ -33,8 +33,3 @@ go install github.com/rovergulf/eth-contracts-go
 # if GOBIN specified
 eth-contracts-go help
 ```
-
-
-### License
-Apache 2.0
-
