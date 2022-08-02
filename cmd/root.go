@@ -18,26 +18,26 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"log"
 	"os"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var (
+	cfgFile     string
+	providerUrl string
+	logger      *zap.SugaredLogger
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "eth-contracts-go",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
+	Short: "CLI application ",
+	Long:  ``,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
@@ -45,8 +45,7 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		log.Fatal(err)
 	}
 }
 
@@ -58,10 +57,18 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.eth-contracts-go.yaml)")
+	rootCmd.PersistentFlags().StringVar(&providerUrl, "provider-url", "", "Ethereum provider url")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().StringP("env", "e", "dev", "Environment to use. Not actually does anything")
+	rootCmd.Flags().Bool("log-json", false, "Enable json logger output")
+	rootCmd.Flags().Bool("log-stacktrace", false, "Enable logger error stacktrace output")
+
+	viper.BindPFlag("provider_url", rootCmd.PersistentFlags().Lookup("provider-url"))
+	viper.BindPFlag("env", rootCmd.Flags().Lookup("env"))
+	viper.BindPFlag("log_json", rootCmd.Flags().Lookup("log-json"))
+	viper.BindPFlag("log_stacktrace", rootCmd.Flags().Lookup("log-stacktrace"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -86,6 +93,31 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		log.Println("Using config file:", viper.ConfigFileUsed())
 	}
+
+	if err := initLogger(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func initLogger() error {
+	cfg := zap.NewDevelopmentConfig()
+	cfg.Development = viper.GetString("env") != "main"
+	cfg.DisableStacktrace = !viper.GetBool("log_stacktrace")
+
+	if viper.GetBool("log_json") {
+		cfg.Encoding = "json"
+	} else {
+		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
+	}
+
+	cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	l, err := cfg.Build()
+	if err != nil {
+		return err
+	}
+	logger = l.Sugar()
+
+	return nil
 }
