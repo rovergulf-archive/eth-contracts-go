@@ -3,6 +3,7 @@ package tests
 import "github.com/ethereum/go-ethereum/common"
 
 // those private keys are copied from `npx node hardhat` values
+// View more: https://hardhat.org/hardhat-runner/docs/getting-started
 // DO NOT EVER USE THAT PRIVATE KEYS IN PRODUCTION
 
 const (
