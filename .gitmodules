@@ -1,0 +1,3 @@
+[submodule "v/eth-contracts"]
+	path = v/eth-contracts
+	url = git@github.com:rovergulf/eth-contracts.git
