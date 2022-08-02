@@ -16,29 +16,68 @@ limitations under the License.
 package cmd
 
 import (
+	"github.com/rovergulf/eth-contracts-go/pkg/client"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
-
-// contractsCmd represents the contracts command
-var contractsCmd = &cobra.Command{
-	Use:   "contracts",
-	Short: "Interact with Ethereum contracts",
-	Long:  ``,
-	Run: func(cmd *cobra.Command, args []string) {
-		logger.Info("contracts called")
-	},
-}
 
 func init() {
 	rootCmd.AddCommand(contractsCmd)
+	//contractsCmd.PersistentFlags().StringP("interface-id", "id", "", "ERC Interface ID name (erc165, erc20, etc...)")
 
-	// Here you will define your flags and configuration settings.
+	contractsCmd.AddCommand(contractsCheckInterfaceIdCmd)
+	contractsCmd.AddCommand(contractsCallCmd)
+	contractsCmd.AddCommand(contractsWatchCmd)
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// contractsCmd.PersistentFlags().String("foo", "", "A help for foo")
+// contractsCmd represents the contracts command
+var contractsCmd = &cobra.Command{
+	Use:          "contracts",
+	Short:        "Interact with Ethereum contracts",
+	Long:         ``,
+	SilenceUsage: true,
+	//Run: func(cmd *cobra.Command, args []string) {
+	//	logger.Info("contracts called")
+	//},
+}
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// contractsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+// contractsInterfaceIdCmd represents the contracts command
+var contractsCheckInterfaceIdCmd = &cobra.Command{
+	Use:   "check-interface-id",
+	Short: "Check contract interface id",
+	Long:  `Checks contract interface id using ERC165`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		c, err := client.NewWithLogger(viper.GetString("provider_url"), logger)
+		if err != nil {
+			return err
+		}
+		defer c.Close()
+
+		logger.Info("check interface id called")
+
+		return nil
+	},
+}
+
+// contractsInterfaceIdCmd represents the contracts command
+var contractsCallCmd = &cobra.Command{
+	Use:   "call",
+	Short: "Call contract methods",
+	Long: `Calls specified contract based on provided (and supported by this package) interface id and address
+It will return error if call arguments are required`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		logger.Info("call called")
+		return nil
+	},
+}
+
+// contractsInterfaceIdCmd represents the contracts command
+var contractsWatchCmd = &cobra.Command{
+	Use:   "watch",
+	Short: "Watch contract events",
+	Long:  `Watch specified contract topics`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		logger.Info("watch called")
+		return nil
+	},
 }
