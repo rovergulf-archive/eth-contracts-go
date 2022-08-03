@@ -7,8 +7,11 @@ source ./scripts/util.sh
 mkdir -p tmp/abigen
 jsonnet hack/jsonnet/abi.jsonnet -m tmp/abigen
 
-abigen --abi=./tmp/abigen/erc20 --pkg erc20 --out=abis/token/erc20/erc20.go
 abigen --abi=./tmp/abigen/erc165 --pkg erc165 --out=abis/common/erc165/erc165.go
+
+abigen --abi=./tmp/abigen/ownable --pkg ownable --out=abis/access/ownable/ownable.go
+
+abigen --abi=./tmp/abigen/erc20 --pkg erc20 --out=abis/token/erc20/erc20.go
 abigen --abi=./tmp/abigen/erc721 --pkg erc721 --out=abis/token/erc721/erc721.go
 abigen --abi=./tmp/abigen/erc721Enumerable --pkg erc721Enumerable --out=abis/token/erc721/extensions/erc721Enumerable/erc721Enumerable.go
 abigen --abi=./tmp/abigen/erc721Metadata --pkg erc721Metadata --out=abis/token/erc721/extensions/erc721Metadata/erc721Metadata.go

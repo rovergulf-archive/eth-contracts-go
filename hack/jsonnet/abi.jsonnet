@@ -8,6 +8,8 @@ local erc1155 = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/
 local erc1155Supply = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol/ERC1155Supply.json";
 local erc1155MetadataURI = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/token/ERC1155/extensions/IERC1155MetadataURI.sol/IERC1155MetadataURI.json";
 
+local ownable = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/access/Ownable.sol/Ownable.json";
+
 {
   erc165: erc165.abi,
   erc20: erc20.abi,
@@ -18,4 +20,5 @@ local erc1155MetadataURI = import "../../v/eth-contracts/artifacts/@openzeppelin
   erc1155: erc1155.abi,
   erc1155MetadataURI: erc1155MetadataURI.abi,
   erc1155Supply: erc1155Supply.abi,
+  ownable: ownable.abi,
 }
