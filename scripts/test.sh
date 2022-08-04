@@ -2,5 +2,5 @@
 
 set -e
 
-go test ./pkg/ethutils
-go test ./defi
+go test ./pkg/ethutils -cover
+go test ./defi -cover
