@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,18 +17,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/ethereum/go-ethereum/accounts/keystore"
 	homedir "github.com/mitchellh/go-homedir"
-	"github.com/rovergulf/eth-contracts-go/pkg/ethutils"
+	"github.com/rovergulf/eth-contracts-go/pkg/logutils"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/jaeger"
-	"go.opentelemetry.io/otel/sdk/resource"
-	tracesdk "go.opentelemetry.io/otel/sdk/trace"
-	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"log"
 	"os"
 )
@@ -42,7 +35,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "eth-contracts-go",
-	Short: "CLI application ",
+	Short: "CLI application for Ethereum contracts interaction",
 	Long:  ``,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
@@ -117,69 +110,10 @@ func initConfig() {
 	if err := initLogger(); err != nil {
 		log.Fatal(err)
 	}
-
-	if viper.IsSet("jaeger_trace") {
-		if _, err := initTracer(viper.GetString("jaeger_trace")); err != nil {
-			logger.Fatal(err)
-		}
-	}
 }
 
 func initLogger() error {
-	cfg := zap.NewDevelopmentConfig()
-	cfg.Development = viper.GetString("env") != "main"
-	cfg.DisableStacktrace = !viper.GetBool("log_stacktrace")
-
-	if viper.GetBool("log_json") {
-		cfg.Encoding = "json"
-	} else {
-		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-	}
-
-	cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-	l, err := cfg.Build()
-	if err != nil {
-		return err
-	}
-	logger = l.Sugar()
-
-	return nil
-}
-
-func initTracer(url string) (*tracesdk.TracerProvider, error) {
-	// Create the Jaeger exporter
-	exp, err := jaeger.New(jaeger.WithCollectorEndpoint(jaeger.WithEndpoint(url)))
-	if err != nil {
-		return nil, err
-	}
-
-	tp := tracesdk.NewTracerProvider(
-		tracesdk.WithSampler(tracesdk.AlwaysSample()),
-		// Always be sure to batch in production.
-		tracesdk.WithBatcher(exp),
-		// Record information about this application in a Resource.
-		tracesdk.WithResource(resource.NewWithAttributes(
-			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("eth-contracts-go"),
-		)),
-	)
-
-	// set global trace provider
-	otel.SetTracerProvider(tp)
-
-	return tp, nil
-}
-
-func defaultSigner() (*keystore.Key, error) {
-	pk := viper.GetString("private_key")
-	if len(pk) == 0 {
-		return nil, fmt.Errorf("private key not specified")
-	}
-
-	k, err := ethutils.PrivateKeyStringToKey(pk)
-	if err != nil {
-		return nil, err
-	}
-
-	return k, nil
+	var err error
+	logger, err = logutils.NewLogger()
+	return err
 }

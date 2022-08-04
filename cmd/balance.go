@@ -21,8 +21,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/rovergulf/eth-contracts-go/abis/token/erc20"
+	"github.com/rovergulf/eth-contracts-go/defi"
 	"github.com/spf13/cobra"
+	"go.opentelemetry.io/otel"
 	"math/big"
 )
 
@@ -52,6 +53,9 @@ var balanceCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
+		ctx, span := otel.GetTracerProvider().Tracer("cli").Start(ctx, "balance")
+		defer span.End()
+
 		strAddress, _ := cmd.Flags().GetString("address")
 		token, _ := cmd.Flags().GetString("token")
 
@@ -68,13 +72,7 @@ var balanceCmd = &cobra.Command{
 				return errors.New("invalid token address")
 			}
 
-			tokenInstance, err := erc20.NewErc20(common.HexToAddress(token), client)
-			if err != nil {
-				logger.Errorw("Unable to get ERC20 instance", "err", err)
-				return err
-			}
-
-			balance, err := tokenInstance.BalanceOf(nil, addr)
+			balance, err := defi.GetTokenAddressBalance(ctx, client, common.HexToAddress(token), addr)
 			if err != nil {
 				logger.Errorw("Unable to retrieve address token balance", "err", err)
 				return err
@@ -86,14 +84,7 @@ var balanceCmd = &cobra.Command{
 				"wei_balance", balance,
 			)
 		} else {
-			blockNumber, err := client.BlockNumber(ctx)
-			if err != nil {
-				return err
-			}
-
-			bn := new(big.Int)
-			bn.SetUint64(blockNumber)
-			balance, err := client.BalanceAt(ctx, addr, bn)
+			balance, err := defi.GetAddressBalance(ctx, client, addr)
 			if err != nil {
 				logger.Errorw("Unable to retrieve address balance", "err", err)
 				return err
