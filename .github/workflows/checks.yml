@@ -25,7 +25,7 @@ jobs:
         run: go fmt ./...
 
       - name: Test
-        run: go test ./pkg/ethutils -cover
+        run: ./scripts/test.sh
 
       - name: Test build
         run: go build .
