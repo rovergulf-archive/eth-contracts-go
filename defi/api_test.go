@@ -1,16 +1,23 @@
 package defi
 
 import (
+	"context"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/rovergulf/eth-contracts-go/abis/token/erc20"
 	"github.com/rovergulf/eth-contracts-go/pkg/ethutils"
 	"github.com/rovergulf/eth-contracts-go/tests"
 	"github.com/stretchr/testify/suite"
 	"log"
+	"os"
 	"testing"
+)
+
+var (
+	testProviderUrl = os.Getenv("TEST_ETH_PROVIDER_URL")
 )
 
 type DefiTestSuite struct {
@@ -18,7 +25,7 @@ type DefiTestSuite struct {
 
 	auth *keystore.Key
 
-	//eth     *ethclient.Client
+	eth     *ethclient.Client
 	backend *backends.SimulatedBackend
 
 	erc20Address common.Address
@@ -26,6 +33,14 @@ type DefiTestSuite struct {
 }
 
 func (suite *DefiTestSuite) SetupSuite() {
+	if len(testProviderUrl) > 0 {
+		client, err := ethclient.DialContext(context.Background(), testProviderUrl)
+		if err != nil {
+			log.Fatalf("Unable to connect test network: %s", err)
+		}
+		suite.eth = client
+	}
+
 	suite.backend = tests.NewFakeBackend()
 
 	key, err := ethutils.PrivateKeyStringToKey(tests.PrivateKey0)
@@ -50,6 +65,10 @@ func (suite *DefiTestSuite) SetupSuite() {
 }
 
 func (suite *DefiTestSuite) TearDownSuite() {
+	if suite.eth != nil {
+		suite.eth.Close()
+	}
+
 	suite.backend.Close()
 }
 

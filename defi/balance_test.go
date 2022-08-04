@@ -6,12 +6,18 @@ import (
 	"github.com/rovergulf/eth-contracts-go/tests"
 )
 
-//func (suite *DefiTestSuite) TestGetAddressBalance() {
-//	ctx, cancel := context.WithCancel(context.Background())
-//	defer cancel()
-//
-//	balance, err := GetAddressBalance(ctx, suite.backend, tests.Account0)
-//}
+func (suite *DefiTestSuite) TestGetAddressBalance() {
+	if suite.eth == nil {
+		return
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	balance, err := GetAddressBalance(ctx, suite.eth, tests.Account0)
+	suite.Nil(err, "should not return an error on balance check")
+	suite.NotNil(balance, "balance result shouldn't be nil")
+}
 
 func (suite *DefiTestSuite) TestGetTokenAddressBalance() {
 	ctx, cancel := context.WithCancel(context.Background())
