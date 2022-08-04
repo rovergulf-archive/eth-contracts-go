@@ -26,6 +26,10 @@ func init() {
 	// nftCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	nftCmd.AddCommand(nftAssetsCmd)
+	addAddressFlag(nftAssetsCmd)
+
+	nftCmd.AddCommand(nftInfoCmd)
+	addAddressFlag(nftInfoCmd)
 }
 
 // nftCmd represents the nft command
@@ -39,10 +43,25 @@ var nftCmd = &cobra.Command{
 // nftAssetsCmd represents the assets command
 var nftAssetsCmd = &cobra.Command{
 	Use:   "assets",
-	Short: "Discover specified address assets",
+	Short: "Discover assets owned by specified address",
 	Long:  ``,
+	Args:  checkIfAddressProvided,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		logger.Info("owner-assets called")
+		//strAddress, _ := cmd.Flags().GetString("address")
+		//owner := common.HexToAddress(strAddress)
+
+		return nil
+	},
+}
+
+// nftAssetsCmd represents the assets command
+var nftInfoCmd = &cobra.Command{
+	Use:   "info",
+	Short: "Discover specified NFT address contract information",
+	Long:  ``,
+	Args:  checkIfAddressProvided,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		logger.Info("nft info called")
 		return nil
 	},
 }

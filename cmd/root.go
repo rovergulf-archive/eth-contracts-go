@@ -16,7 +16,9 @@ limitations under the License.
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/rovergulf/eth-contracts-go/pkg/logutils"
 	"github.com/spf13/cobra"
@@ -116,4 +118,21 @@ func initLogger() error {
 	var err error
 	logger, err = logutils.NewLogger()
 	return err
+}
+
+func addAddressFlag(cmd *cobra.Command) {
+	cmd.Flags().StringP("address", "a", "", "Specify address")
+}
+
+func checkIfAddressProvided(cmd *cobra.Command, args []string) error {
+	addr, err := cmd.Flags().GetString("address")
+	if err != nil {
+		return err
+	}
+
+	if !common.IsHexAddress(addr) {
+		return errors.New("invalid address")
+	}
+
+	return nil
 }

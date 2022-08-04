@@ -30,7 +30,7 @@ import (
 func init() {
 	rootCmd.AddCommand(balanceCmd)
 
-	balanceCmd.Flags().StringP("address", "a", "", "Specify address")
+	addAddressFlag(balanceCmd)
 	balanceCmd.Flags().StringP("token", "t", "", "ERC20/ERC777 token address")
 }
 
@@ -39,18 +39,7 @@ var balanceCmd = &cobra.Command{
 	Use:   "balance",
 	Short: "Check address balance",
 	Long:  ``,
-	Args: func(cmd *cobra.Command, args []string) error {
-		addr, err := cmd.Flags().GetString("address")
-		if err != nil {
-			return err
-		}
-
-		if !common.IsHexAddress(addr) {
-			return errors.New("invalid address")
-		}
-
-		return nil
-	},
+	Args:  checkIfAddressProvided,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx := context.Background()
 		ctx, span := otel.GetTracerProvider().Tracer("cli").Start(ctx, "balance")
@@ -66,6 +55,7 @@ var balanceCmd = &cobra.Command{
 			logger.Errorw("Unable to connect provider", "err", err)
 			return err
 		}
+		defer client.Close()
 
 		if len(token) > 0 {
 			if !common.IsHexAddress(token) {
