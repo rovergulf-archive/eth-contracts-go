@@ -2,6 +2,7 @@ package defi
 
 import (
 	"context"
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/rovergulf/eth-contracts-go/abis/token/erc20"
@@ -24,7 +25,7 @@ func GetAddressBalance(ctx context.Context, client *ethclient.Client, address co
 	return balance, nil
 }
 
-func GetTokenAddressBalance(ctx context.Context, client *ethclient.Client, token common.Address, address common.Address) (*big.Int, error) {
+func GetTokenAddressBalance(ctx context.Context, client bind.ContractBackend, token common.Address, address common.Address) (*big.Int, error) {
 	erc20Instance, err := erc20.NewErc20(token, client)
 	if err != nil {
 		return nil, err
