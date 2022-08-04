@@ -51,6 +51,12 @@ func NewHandler(ctx context.Context, providerUrl string) (*Handler, error) {
 }
 
 func (h *Handler) GetAddressBalance(ctx context.Context, address common.Address) (*big.Int, error) {
+	if h.tracer != nil {
+		var span trace.Span
+		ctx, span = h.tracer.Start(ctx, "get_balance")
+		defer span.End()
+	}
+
 	b, err := GetAddressBalance(ctx, h.client, address)
 	if err != nil {
 		h.logger.Errorw("Unable to get balance", "err", err)
@@ -61,6 +67,12 @@ func (h *Handler) GetAddressBalance(ctx context.Context, address common.Address)
 }
 
 func (h *Handler) GetTokenAddressBalance(ctx context.Context, token, address common.Address) (*big.Int, error) {
+	if h.tracer != nil {
+		var span trace.Span
+		ctx, span = h.tracer.Start(ctx, "get_token_balance")
+		defer span.End()
+	}
+
 	b, err := GetTokenAddressBalance(ctx, h.client, token, address)
 	if err != nil {
 		h.logger.Errorw("Unable to get token balance", "err", err)
