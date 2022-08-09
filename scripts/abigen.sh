@@ -20,6 +20,7 @@ abigen --abi=./tmp/abigen/erc1820Registry --pkg erc1820 --out=abis/introspection
 
 abigen --abi=./tmp/abigen/ownable --pkg ownable --out=abis/access/ownable/ownable.go
 
+abigen --abi=./tmp/abigen/erc4626 --pkg erc4626 --out=abis/token/erc4626/erc4626.go
 abigen --abi=./tmp/abigen/erc20 --bin=./tmp/bytecode/erc20 --pkg erc20 --out=abis/token/erc20/erc20.go
 abigen --abi=./tmp/abigen/erc721 --bin=./tmp/bytecode/erc721 --pkg erc721 --out=abis/token/erc721/erc721.go
 abigen --abi=./tmp/abigen/erc721Enumerable --pkg erc721Enumerable --out=abis/token/erc721/extensions/erc721Enumerable/erc721Enumerable.go
