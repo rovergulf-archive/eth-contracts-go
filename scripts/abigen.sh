@@ -15,7 +15,8 @@ for bin in tmp/bytecode/*; do
   echo $value > $bin
 done
 
-abigen --abi=./tmp/abigen/erc165 --pkg erc165 --out=abis/common/erc165/erc165.go
+abigen --abi=./tmp/abigen/erc165 --pkg erc165 --out=abis/introspection/erc165/erc165.go
+abigen --abi=./tmp/abigen/erc1820Registry --pkg erc1820 --out=abis/introspection/erc1820/erc1820Registry.go
 
 abigen --abi=./tmp/abigen/ownable --pkg ownable --out=abis/access/ownable/ownable.go
 
