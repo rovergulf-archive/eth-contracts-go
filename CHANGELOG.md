@@ -6,10 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] v0.2.0
 
-## 23 Aug 2022
+## 24 Aug 2022
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+
+## 23 Aug 2022
+
+### Added
 
 ### Changed
 
@@ -28,14 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - token denomination helpers
 - New commands:
   - EVM Network provider info
-  - NFT collection assets and collection info
+  - NFT collection info
 - opentracing support
-
-### Changed
-
-### Fixed
-
-### Removed
 
 
 ## Released [v0.1.0]
