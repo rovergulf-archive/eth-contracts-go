@@ -4,9 +4,13 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind/backends"
 	"github.com/ethereum/go-ethereum/core"
 	"math/big"
+	"os"
 )
 
-var defaultAlloc = new(big.Int)
+var (
+	TestProviderUrl = os.Getenv("TEST_ETH_PROVIDER_URL")
+	defaultAlloc    = new(big.Int)
+)
 
 func NewFakeBackend() *backends.SimulatedBackend {
 	defaultAlloc.SetString("1000000000000000000000", 10)

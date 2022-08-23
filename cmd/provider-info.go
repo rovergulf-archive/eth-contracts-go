@@ -37,6 +37,7 @@ var providerCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		defer client.Close()
 
 		chainId, err := client.ChainID(ctx)
 		if err != nil {

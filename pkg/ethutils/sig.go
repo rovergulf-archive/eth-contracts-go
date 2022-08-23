@@ -51,15 +51,25 @@ func VerifyEcRecover(payload, sig []byte, address common.Address) error {
 	return nil
 }
 
-//func VerifySignNoRecoverId(payload, sig []byte, address common.Address) error {
-//	if len(sig) != 65 {
-//		return ErrInvalidSignatureLength
-//	}
-//
-//	signatureNoRecoverID := sig[:len(sig)-1] // remove recovery id
-//	if !crypto.VerifySignature(address.Bytes(), payload, signatureNoRecoverID) {
-//		return fmt.Errorf("invalid signature")
-//	}
-//
-//	return nil
-//}
+func VerifySignNoRecoverId(payload, sig []byte, address common.Address) error {
+	if len(sig) != 65 {
+		return ErrInvalidSignatureLength
+	}
+
+	sigPublicKeyECDSA, err := crypto.SigToPub(payload, sig)
+	if err != nil {
+		return err
+	}
+
+	sigPublicKeyBytes := crypto.FromECDSAPub(sigPublicKeyECDSA)
+	if address.Hex() != common.BytesToAddress(sigPublicKeyBytes).Hex() {
+		return fmt.Errorf("invalid pubkey")
+	}
+
+	signatureNoRecoverID := sig[:len(sig)-1] // remove recovery id
+	if !crypto.VerifySignature(sigPublicKeyBytes, payload, signatureNoRecoverID) {
+		return fmt.Errorf("invalid signature")
+	}
+
+	return nil
+}

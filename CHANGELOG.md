@@ -6,9 +6,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] v0.2.0
 
-## 25 Aug 2022
+## 23 Aug 2022
 
 ### Added
+
+
+### Changed
+
+### Fixed
+
+### Removed
+
+
+## 22 Aug 2022 and earlier
+
+### Added
+- Added more generated interfaces
+- ERC165 compatible values of known interfaces shown in [README.md](./README.md)
+- basic NFT API handler
+- NFT Metadata standard model
+- token denomination helpers
+- New commands:
+  - EVM Network provider info
+  - NFT collection assets and collection info
+- opentracing support
 
 ### Changed
 

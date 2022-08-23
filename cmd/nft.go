@@ -16,6 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"context"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/rovergulf/eth-contracts-go/nft"
 	"github.com/spf13/cobra"
 )
 
@@ -41,27 +45,67 @@ var nftCmd = &cobra.Command{
 }
 
 // nftAssetsCmd represents the assets command
-var nftAssetsCmd = &cobra.Command{
-	Use:   "assets",
-	Short: "Discover assets owned by specified address",
-	Long:  ``,
-	Args:  checkIfAddressProvided,
-	RunE: func(cmd *cobra.Command, args []string) error {
-		//strAddress, _ := cmd.Flags().GetString("address")
-		//owner := common.HexToAddress(strAddress)
-
-		return nil
-	},
-}
-
-// nftAssetsCmd represents the assets command
 var nftInfoCmd = &cobra.Command{
 	Use:   "info",
 	Short: "Discover specified NFT address contract information",
 	Long:  ``,
 	Args:  checkIfAddressProvided,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		logger.Info("nft info called")
+		ctx := context.Background()
+		strAddress, _ := cmd.Flags().GetString("address")
+		tokenAddr := common.HexToAddress(strAddress)
+
+		client, err := ethclient.DialContext(ctx, providerUrl)
+		if err != nil {
+			return err
+		}
+		defer client.Close()
+
+		info, err := nft.FindCollectionMetadata(ctx, client, tokenAddr)
+		if err != nil {
+			return err
+		}
+
+		logger.Infow("NFT Contract verified",
+			"interface", info.InterfaceID,
+			"name", info.Name,
+			"symbol", info.Symbol,
+		)
+		return nil
+	},
+}
+
+// nftAssetsCmd represents the assets command
+var nftAssetsCmd = &cobra.Command{
+	Use:   "assets",
+	Short: "Discover assets owned by specified address",
+	Long:  ``,
+	Args:  checkIfAddressProvided,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ctx := context.Background()
+		strAddress, _ := cmd.Flags().GetString("address")
+		strOwner, err := cmd.Flags().GetString("owner")
+		tokenAddr := common.HexToAddress(strAddress)
+		tokensOwner := common.HexToAddress(strOwner)
+
+		client, err := ethclient.DialContext(ctx, providerUrl)
+		if err != nil {
+			return err
+		}
+		defer client.Close()
+
+		assets, err := nft.FindCollectionOwnerAssets(ctx, client, tokenAddr, tokensOwner)
+		if err != nil {
+			logger.Errorw("Unable to find owner assets", "err", err)
+			return err
+		}
+
+		if assets.AssetsCount > 0 {
+			logger.Infof("%s is an owner of %d assets", tokensOwner, assets.AssetsCount)
+		} else {
+			logger.Info("No assets found for specified address")
+		}
+
 		return nil
 	},
 }

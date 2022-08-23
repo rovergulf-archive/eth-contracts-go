@@ -12,12 +12,7 @@ import (
 	"github.com/rovergulf/eth-contracts-go/tests"
 	"github.com/stretchr/testify/suite"
 	"log"
-	"os"
 	"testing"
-)
-
-var (
-	testProviderUrl = os.Getenv("TEST_ETH_PROVIDER_URL")
 )
 
 type DefiTestSuite struct {
@@ -33,8 +28,8 @@ type DefiTestSuite struct {
 }
 
 func (suite *DefiTestSuite) SetupSuite() {
-	if len(testProviderUrl) > 0 {
-		client, err := ethclient.DialContext(context.Background(), testProviderUrl)
+	if len(tests.TestProviderUrl) > 0 {
+		client, err := ethclient.DialContext(context.Background(), tests.TestProviderUrl)
 		if err != nil {
 			log.Fatalf("Unable to connect test network: %s", err)
 		}

@@ -120,6 +120,12 @@ func initLogger() error {
 	return err
 }
 
+func addAndBindPrivateKeyFlag(cmd *cobra.Command) {
+	cmd.Flags().StringP("private-key", "pk", "", "Specify private key path or string value")
+	viper.BindPFlag("eth_private_key", cmd.Flags().Lookup("private_key"))
+	//cmd.Flags().Bool("password", false, "Type password to unlock private key file")
+}
+
 func addAddressFlag(cmd *cobra.Command) {
 	cmd.Flags().StringP("address", "a", "", "Specify address")
 }
