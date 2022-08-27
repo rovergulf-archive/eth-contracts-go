@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,15 +16,16 @@ limitations under the License.
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
+	homedir "github.com/mitchellh/go-homedir"
+	"github.com/rovergulf/eth-contracts-go/pkg/logutils"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 	"log"
 	"os"
-
-	homedir "github.com/mitchellh/go-homedir"
-	"github.com/spf13/viper"
 )
 
 var (
@@ -36,7 +37,7 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "eth-contracts-go",
-	Short: "CLI application ",
+	Short: "CLI application for Ethereum contracts interaction",
 	Long:  ``,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
@@ -45,7 +46,12 @@ var rootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatal(err)
+		if logger != nil {
+			logger.Error(err)
+		} else {
+			log.Println(err)
+		}
+		os.Exit(1)
 	}
 }
 
@@ -57,7 +63,8 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.eth-contracts-go.yaml)")
-	rootCmd.PersistentFlags().StringVar(&providerUrl, "provider-url", "", "Ethereum provider url")
+	rootCmd.PersistentFlags().StringVar(&providerUrl, "provider-url", "", "Ethereum provider url. Uses ETH_PROVIDER_URL env as default")
+	rootCmd.PersistentFlags().String("private-key", "", "Ethereum private signer key. Uses ETHEREUM_PRIVATE_KEY env as default")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -73,6 +80,10 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
+	viper.SetDefault("jaeger_trace", os.Getenv("JAEGER_TRACE_COLLECTOR"))
+	viper.SetDefault("provider_url", os.Getenv("ETH_PROVIDER_URL"))
+	viper.SetDefault("eth_private_key", os.Getenv("ETHEREUM_PRIVATE_KEY"))
+
 	if cfgFile != "" {
 		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
@@ -86,6 +97,7 @@ func initConfig() {
 
 		// Search config in home directory with name ".eth-contracts-go" (without extension).
 		viper.AddConfigPath(home)
+		viper.AddConfigPath(os.Getenv("ETH_CONTRACTS_GO_HOME"))
 		viper.SetConfigName(".eth-contracts-go")
 	}
 
@@ -94,6 +106,7 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		log.Println("Using config file:", viper.ConfigFileUsed())
+		cfgFile = viper.ConfigFileUsed()
 	}
 
 	if err := initLogger(); err != nil {
@@ -102,22 +115,30 @@ func initConfig() {
 }
 
 func initLogger() error {
-	cfg := zap.NewDevelopmentConfig()
-	cfg.Development = viper.GetString("env") != "main"
-	cfg.DisableStacktrace = !viper.GetBool("log_stacktrace")
+	var err error
+	logger, err = logutils.NewLogger()
+	return err
+}
 
-	if viper.GetBool("log_json") {
-		cfg.Encoding = "json"
-	} else {
-		cfg.EncoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
-	}
+func addAndBindPrivateKeyFlag(cmd *cobra.Command) {
+	cmd.Flags().StringP("private-key", "pk", "", "Specify private key path or string value")
+	viper.BindPFlag("eth_private_key", cmd.Flags().Lookup("private_key"))
+	//cmd.Flags().Bool("password", false, "Type password to unlock private key file")
+}
 
-	cfg.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
-	l, err := cfg.Build()
+func addAddressFlag(cmd *cobra.Command) {
+	cmd.Flags().StringP("address", "a", "", "Specify address")
+}
+
+func checkIfAddressProvided(cmd *cobra.Command, args []string) error {
+	addr, err := cmd.Flags().GetString("address")
 	if err != nil {
 		return err
 	}
-	logger = l.Sugar()
+
+	if !common.IsHexAddress(addr) {
+		return errors.New("invalid address")
+	}
 
 	return nil
 }

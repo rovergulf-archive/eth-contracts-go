@@ -104,10 +104,10 @@ func (suite *TestSigSuite) TestVerifyEcRecover() {
 	suite.NotNil(VerifyEcRecover(tt4.payload, tt4.sig, tt4.address), "should not verify signature")
 }
 
-//func (suite *TestSigSuite) TestVerifySignNoRecoverId() {
-//	tt1 := suite.testArgs[0]
-//	tt4 := suite.testArgs[3]
-//	suite.Nil(VerifySignNoRecoverId(crypto.Keccak256(tt1.payload), tt1.sig, tt1.address), "should verify signature")
-//	suite.NotNil(VerifySignNoRecoverId(tt4.payload, tt4.sig, tt4.address), "should not verify signature")
-//	suite.NotNil(VerifySignNoRecoverId(tt1.payload, tt1.sig[:len(tt1.sig)-1], tt1.address), "should not pass verification")
-//}
+func (suite *TestSigSuite) TestVerifySignNoRecoverId() {
+	tt1 := suite.testArgs[0]
+	tt4 := suite.testArgs[3]
+	suite.Nil(VerifySignNoRecoverId(tt1.payload, tt1.sig, tt1.address), "should verify signature")
+	suite.NotNil(VerifySignNoRecoverId(tt4.payload, tt4.sig, tt4.address), "should not verify signature")
+	suite.NotNil(VerifySignNoRecoverId(tt1.payload, tt1.sig[:len(tt1.sig)-1], tt1.address), "should not pass verification")
+}

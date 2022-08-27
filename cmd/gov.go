@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,26 +19,19 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// contractsCmd represents the contracts command
-var contractsCmd = &cobra.Command{
-	Use:   "contracts",
-	Short: "Interact with Ethereum contracts",
+// govCmd represents the gov command
+var govCmd = &cobra.Command{
+	Use:   "gov",
+	Short: "Governance API extensions",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		logger.Info("contracts called")
+		logger.Info("gov called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(contractsCmd)
+	rootCmd.AddCommand(govCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// contractsCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// contractsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// govCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// govCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

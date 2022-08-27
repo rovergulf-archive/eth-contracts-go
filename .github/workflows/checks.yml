@@ -16,7 +16,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.18
+          go-version: 1.19
 
       - name: Go get
         run: go mod tidy
@@ -25,7 +25,7 @@ jobs:
         run: go fmt ./...
 
       - name: Test
-        run: go test ./pkg/ethutils -cover
+        run: ./scripts/test.sh
 
       - name: Test build
         run: go build .
