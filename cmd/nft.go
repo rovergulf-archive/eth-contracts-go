@@ -35,6 +35,7 @@ func init() {
 	nftCmd.AddCommand(nftAssetsCmd)
 	addAddressFlag(nftAssetsCmd)
 	nftAssetsCmd.Flags().String("owner", "", "Specify user account address")
+	//nftAssetsCmd.Flags().Bool("load-metadata", false, "Load and print out metadata for found tokens")
 }
 
 // nftCmd represents the nft command
@@ -89,13 +90,19 @@ var nftAssetsCmd = &cobra.Command{
 		tokenAddr := common.HexToAddress(strAddress)
 		tokensOwner := common.HexToAddress(strOwner)
 
+		loadMd, _ := cmd.Flags().GetBool("load-metadata")
+
 		client, err := ethclient.DialContext(ctx, providerUrl)
 		if err != nil {
 			return err
 		}
 		defer client.Close()
 
-		assets, err := nft.FindCollectionOwnerAssets(ctx, client, tokenAddr, tokensOwner)
+		assets, err := nft.FindCollectionOwnerAssets(ctx, client, nft.AssetsRequest{
+			Address:      tokenAddr,
+			Owner:        tokensOwner,
+			LoadMetadata: loadMd,
+		})
 		if err != nil {
 			logger.Errorw("Unable to find owner assets", "err", err)
 			return err
