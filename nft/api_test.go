@@ -16,7 +16,9 @@ import (
 )
 
 var (
-	fakeMetadataUri = "https://api.rovergulf.net/nft/metadata/test-chubbies/"
+	testCollectionName   = "SomeToken"
+	testCollectionSymbol = "ROFL"
+	fakeMetadataUri      = "https://api.rovergulf.net/nft/metadata/test-chubbies/"
 )
 
 type NFTTestSuite struct {
@@ -35,7 +37,6 @@ type NFTTestSuite struct {
 }
 
 func (suite *NFTTestSuite) SetupSuite() {
-
 	suite.backend = tests.NewFakeBackend()
 
 	key, err := ethutils.PrivateKeyStringToKey(tests.PrivateKey0)
@@ -49,7 +50,7 @@ func (suite *NFTTestSuite) SetupSuite() {
 		log.Fatal(err)
 	}
 
-	erc721Addr, _, erc721Instance, err := erc721.DeployErc721(deployer, suite.backend, "SomeToken", "ST")
+	erc721Addr, _, erc721Instance, err := erc721.DeployErc721(deployer, suite.backend, testCollectionName, testCollectionSymbol)
 	if err != nil {
 		log.Fatalf("Unable to upload test erc721: %s", err)
 	}

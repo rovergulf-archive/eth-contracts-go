@@ -29,11 +29,12 @@ func init() {
 	// nftCmd.PersistentFlags().String("foo", "", "A help for foo")
 	// nftCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	nftCmd.AddCommand(nftAssetsCmd)
-	addAddressFlag(nftAssetsCmd)
-
 	nftCmd.AddCommand(nftInfoCmd)
 	addAddressFlag(nftInfoCmd)
+
+	nftCmd.AddCommand(nftAssetsCmd)
+	addAddressFlag(nftAssetsCmd)
+	nftAssetsCmd.Flags().String("owner", "", "Specify user account address")
 }
 
 // nftCmd represents the nft command

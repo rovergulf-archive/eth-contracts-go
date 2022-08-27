@@ -14,32 +14,25 @@ import (
 var ErrInvalidContractInterface = errors.New("invalid contract interface")
 
 func FindCollectionMetadata(ctx context.Context, backend bind.ContractBackend, address common.Address) (*model.NFTCollectionResponse, error) {
-	//lb, err := backend.BlockNumber(ctx)
-	//if err != nil {
-	//	return nil, err
-	//}
-	//lastBlock := new(big.Int).SetUint64(lb)
-
 	erc165Instance, err := erc165.NewErc165(address, backend)
 	if err != nil {
 		return nil, err
 	}
 
-	isERC721, err := erc165Instance.SupportsInterface(nil, interfaces.ERC721)
-	if err != nil {
-		return nil, err
-	}
-	isERC1155, err := erc165Instance.SupportsInterface(nil, interfaces.ERC1155)
-	if err != nil {
-		return nil, err
-	}
+	isERC721, _ := erc165Instance.SupportsInterface(nil, interfaces.ERC721)
+	isERC1155, _ := erc165Instance.SupportsInterface(nil, interfaces.ERC1155)
 
 	if !isERC721 && !isERC1155 {
 		return nil, ErrInvalidContractInterface
 	}
 
 	result := &model.NFTCollectionResponse{
-		Address:            address,
+		NFTContractBaseMetadata: model.NFTContractBaseMetadata{
+			Address:   address,
+			Owner:     common.Address{},
+			IsERC721:  isERC721,
+			IsERC1155: isERC1155,
+		},
 		CollectionMetadata: &model.CollectionMetadata{},
 	}
 
@@ -59,9 +52,15 @@ func FindCollectionMetadata(ctx context.Context, backend bind.ContractBackend, a
 			return nil, err
 		}
 
-		result.InterfaceID = "ERC721"
 		result.Name = name
 		result.Symbol = symbol
+	} else {
+		//erc1155Instance, err := erc1155.NewErc1155(address, backend)
+		//if err != nil {
+		//	return nil, err
+		//}
+
+		//
 	}
 
 	return result, nil

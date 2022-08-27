@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] v0.2.0
 
-## 24 Aug 2022
+## 26 Aug 2022
 
 ### Added
 
@@ -17,11 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 
-## 23 Aug 2022
+## 25 Aug 2022
 
 ### Added
 
 ### Changed
+- Updated dependencies
 
 ### Fixed
 
