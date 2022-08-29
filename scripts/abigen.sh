@@ -19,6 +19,8 @@ abigen --abi=./tmp/abigen/erc165 --pkg erc165 --out=abis/introspection/erc165/er
 abigen --abi=./tmp/abigen/erc1820Registry --pkg erc1820 --out=abis/introspection/erc1820/erc1820Registry.go
 
 abigen --abi=./tmp/abigen/ownable --pkg ownable --out=abis/access/ownable/ownable.go
+abigen --abi=./tmp/abigen/erc173 --pkg erc173 --out=abis/interfaces/erc173/erc173.go
+abigen --abi=./tmp/abigen/erc5313 --pkg erc5313 --out=abis/interfaces/erc5313/erc5313.go
 
 abigen --abi=./tmp/abigen/erc4626 --pkg erc4626 --out=abis/token/erc4626/erc4626.go
 abigen --abi=./tmp/abigen/erc20 --bin=./tmp/bytecode/erc20 --pkg erc20 --out=abis/token/erc20/erc20.go
