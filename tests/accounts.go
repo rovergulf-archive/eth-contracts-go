@@ -43,4 +43,8 @@ var (
 	Account8  = common.HexToAddress("0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f")
 	Account9  = common.HexToAddress("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720")
 	Account10 = common.HexToAddress("0xBcd4042DE499D14e55001CcbB24a551F3b954096")
+	// dev public accounts
+	AccountDev1 = common.HexToAddress("0x527555Ce5b4C25f4FDA09Ea6698234415771D712")
+	AccountDev2 = common.HexToAddress("0xACf12F2f732c09b95e39CF8f7d15bf1CA264B086")
+	AccountDev3 = common.HexToAddress("0xB1D9c6a18a27e948225a6d3f6f45EAa0dF5cB884")
 )
