@@ -8,6 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/miner"
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/params"
+	"math/big"
 	"time"
 )
 
@@ -18,6 +19,7 @@ type GethNode struct {
 
 func NewFakeGethNode() (*GethNode, error) {
 	// import genesis
+	defaultAlloc.SetString("1000000000000000000000", 10)
 	gen := &core.Genesis{
 		Config: params.AllEthashProtocolChanges,
 		Alloc: core.GenesisAlloc{
@@ -33,12 +35,12 @@ func NewFakeGethNode() (*GethNode, error) {
 			Account9:  core.GenesisAccount{Balance: defaultAlloc},
 			Account10: core.GenesisAccount{Balance: defaultAlloc},
 		},
-		GasLimit: 4712388,
+		GasLimit: params.GenesisGasLimit,
 	}
 
-	n, err := node.New(&node.Config{HTTPPort: 8545, AuthPort: 8445})
+	n, err := node.New(&node.Config{HTTPPort: 8545, AuthPort: 8546})
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	ethcfg := &ethconfig.Config{
@@ -46,7 +48,10 @@ func NewFakeGethNode() (*GethNode, error) {
 		TrieTimeout:    time.Minute,
 		TrieDirtyCache: 256,
 		TrieCleanCache: 256,
-		Miner:          miner.Config{GasCeil: 30_000_000},
+		Miner: miner.Config{
+			GasCeil:  30_000_000,
+			GasPrice: new(big.Int).SetUint64(params.TxGas),
+		},
 	}
 	ethservice, err := eth.New(n, ethcfg)
 	if err != nil {
