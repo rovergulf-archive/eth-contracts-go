@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] v0.3.0
 
-## 3 Sep 2022
+## 6 Sep 2022
 
 ### Added
 
@@ -16,17 +16,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## 5 Sep 2022
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+
+
+## 3 Sep 2022
+
+### Added
+- CLI `watch` command
 
 ## 2 Sep 2022
 
 ### Added
 - CLI `node` command run dev node now
-
-### Changed
-
-### Fixed
-
-### Removed
 
 
 ## 27 Aug 2022
