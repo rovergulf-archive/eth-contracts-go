@@ -3,7 +3,7 @@ module github.com/rovergulf/eth-contracts-go
 go 1.19
 
 require (
-	github.com/ethereum/go-ethereum v1.10.23
+	github.com/ethereum/go-ethereum v1.10.25
 	github.com/google/uuid v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/spf13/cobra v1.5.0
@@ -14,7 +14,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.9.0
 	go.opentelemetry.io/otel/trace v1.9.0
 	go.uber.org/zap v1.23.0
-	golang.org/x/net v0.0.0-20220607020251-c690dde0001d
 )
 
 require (
