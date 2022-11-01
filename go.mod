@@ -6,7 +6,7 @@ require (
 	github.com/ethereum/go-ethereum v1.10.23
 	github.com/google/uuid v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
-	github.com/spf13/cobra v1.5.0
+	github.com/spf13/cobra v1.6.1
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
 	go.opentelemetry.io/otel v1.9.0
@@ -14,7 +14,6 @@ require (
 	go.opentelemetry.io/otel/sdk v1.9.0
 	go.opentelemetry.io/otel/trace v1.9.0
 	go.uber.org/zap v1.23.0
-	golang.org/x/net v0.0.0-20220607020251-c690dde0001d
 )
 
 require (
