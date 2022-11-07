@@ -24,6 +24,9 @@ jobs:
       - name: Fmt
         run: go fmt ./...
 
+      - name: Fmt
+        run: go vet ./...
+
       - name: Test
         run: ./scripts/test.sh
 
