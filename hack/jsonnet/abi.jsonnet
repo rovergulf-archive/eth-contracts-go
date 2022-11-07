@@ -20,9 +20,9 @@ local erc5313 = import "../../v/eth-contracts/artifacts/contracts/interfaces/IER
 
 // experimental
 local coin = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Coin.sol/RovergulfCoin.json";
-local coinPool = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Pool.sol/RCPool.json";
+local coinPool = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Pool.sol/RCPoolManager.json";
 local coinStake = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Stake.sol/RCStake.json";
-local coinVest = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Vest.sol/RCVest.json";
+local coinVault = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Vault.sol/RCVault.json";
 
 local treasury = import "../../v/eth-contracts/artifacts/contracts/experimental/Treasury.sol/Treasury.json";
 
@@ -45,6 +45,6 @@ local treasury = import "../../v/eth-contracts/artifacts/contracts/experimental/
   coin: coin.abi,
   coinPool: coinPool.abi,
   coinStake: coinStake.abi,
-  coinVest: coinVest.abi,
+  coinVault: coinVault.abi,
   treasury: treasury.abi,
 }

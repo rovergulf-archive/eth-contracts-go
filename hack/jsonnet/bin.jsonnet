@@ -4,9 +4,9 @@ local erc777 = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/t
 local erc1155 = import "../../v/eth-contracts/artifacts/@openzeppelin/contracts/token/ERC1155/ERC1155.sol/ERC1155.json";
 
 local coin = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Coin.sol/RovergulfCoin.json";
-local coinPool = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Pool.sol/RCPool.json";
+local coinPool = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Pool.sol/RCPoolManager.json";
 local coinStake = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Stake.sol/RCStake.json";
-local coinVest = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Vest.sol/RCVest.json";
+local coinVault = import "../../v/eth-contracts/artifacts/contracts/experimental/coin/Vault.sol/RCVault.json";
 
 local treasury = import "../../v/eth-contracts/artifacts/contracts/experimental/Treasury.sol/Treasury.json";
 
@@ -18,6 +18,6 @@ local treasury = import "../../v/eth-contracts/artifacts/contracts/experimental/
   coin: coin.bytecode,
   coinPool: coinPool.bytecode,
   coinStake: coinStake.bytecode,
-  coinVest: coinVest.bytecode,
+  coinVault: coinVault.bytecode,
   treasury: treasury.bytecode,
 }
