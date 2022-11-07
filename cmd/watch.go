@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"context"
+	"fmt"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/rovergulf/eth-contracts-go/watcher"
 	"github.com/spf13/cobra"
 )
@@ -45,6 +47,8 @@ var watchCmd = &cobra.Command{
 			return err
 		}
 
-		return w.WatchEvents(ctx, addrs, topics)
+		return w.WatchEvents(ctx, addrs, topics, func(ctx context.Context, eventLog types.Log) {
+			fmt.Println(eventLog)
+		})
 	},
 }
