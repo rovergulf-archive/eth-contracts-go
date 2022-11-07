@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased] v0.3.0
 
-## 6 Sep 2022
+## 8 Nov 2022
 
 ### Added
 
@@ -16,16 +16,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## 5 Sep 2022
+
+## 7 Nov 2022
 
 ### Added
+- Updated watchdog behaviour to support callback function
 
 ### Changed
+- Dependencies updated
 
 ### Fixed
 
 ### Removed
-
 
 
 ## 3 Sep 2022
